@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Rizzy Shop</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <a href="./index.html">
+                        <img src="./images/header/rizzy_shog_logo-removebg-preview.png" alt="Rizzy Shop" width="200px">
+                    </a>
+                </div>
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="account.html">Account</a></li>
+                    </ul>
+                </nav>
+                <a href="./cart.html"><img class="cart" src="./images/header/cart.svg" alt="Cart"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="small-container checkout-page">
+        <h2>Your Cart Items</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Size</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items"></tbody>
+        </table>
+        <div class="total-price">
+            <h3>Total: $<span id="total-price">0.00</span></h3>
+        </div>
+        <h2>Thank You for Shopping with Us!</h2>
+        <p>Your order has been placed successfully.</p>
+        <p>We appreciate your business and hope to see you again soon!</p>
+        <a href="./index.html" class="btn">Continue Shopping</a>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="belowfooter">
+                &copy; Rizzy Shop and Associates, 2024 <br>
+                All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Displaying cart items on the checkout page
+        const cartItemsContainer = document.getElementById('cart-items');
+        const totalPriceContainer = document.getElementById('total-price');
+
+        function loadCartItems() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            let total = 0;
+
+            cartItems.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.size}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                `;
+                cartItemsContainer.appendChild(row);
+                total += item.price * item.quantity;
+            });
+
+            totalPriceContainer.textContent = total.toFixed(2);
+        }
+
+        loadCartItems();
+    </script>
+</body>
+</html>
