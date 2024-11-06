@@ -15,14 +15,13 @@ app.use(express.static('public'));
 app.get('/account', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'account.html'));
 });
-
 // Function to read users from users.json
 const readUsers = () => {
     try {
         const data = fs.readFileSync('./users.json', 'utf8');
         return data ? JSON.parse(data) : []; // Return an empty array if the data is empty
     } catch (error) {
-        console.error('Error reading users:', error);
+        console.error('Eror reading users:', error);
         return []; // Return an empty array if there's an error
     }
 };

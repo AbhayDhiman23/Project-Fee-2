@@ -38,6 +38,7 @@
                     <th>Size</th>
                     <th>Quantity</th>
                     <th>Subtotal</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="cart-items"></tbody>
@@ -61,29 +62,58 @@
     </div>
 
     <script>
-        // Displaying cart items on the checkout page
         const cartItemsContainer = document.getElementById('cart-items');
         const totalPriceContainer = document.getElementById('total-price');
 
+        let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Function to update the cart in localStorage and reload the cart display
+        function updateCart() {
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            loadCartItems();
+        }
+
+        // Function to remove an item from the cart by index
+        function removeItem(index) {
+            cartItems.splice(index, 1); // Remove the item
+            updateCart();
+        }
+
+        // Function to change the quantity of an item
+        function changeQuantity(index, increment) {
+            cartItems[index].quantity += increment;
+            if (cartItems[index].quantity < 1) cartItems[index].quantity = 1; // Prevent negative quantity
+            updateCart();
+        }
+
+        // Function to load and display cart items on the page
         function loadCartItems() {
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItemsContainer.innerHTML = '';
             let total = 0;
 
-            cartItems.forEach(item => {
+            cartItems.forEach((item, index) => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${item.name}</td>
                     <td>${item.size}</td>
                     <td>${item.quantity}</td>
-                    <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                    <td>$${subtotal.toFixed(2)}</td>
+                    <td>
+                        <button class="btn" onclick="changeQuantity(${index}, 1)">+</button>
+                        <button class="btn" onclick="changeQuantity(${index}, -1)">-</button>
+                        <button class="btn" onclick="removeItem(${index})">Remove</button>
+                    </td>
                 `;
                 cartItemsContainer.appendChild(row);
-                total += item.price * item.quantity;
             });
 
             totalPriceContainer.textContent = total.toFixed(2);
         }
 
+        // Load the cart items when the page loads
         loadCartItems();
     </script>
 </body>
